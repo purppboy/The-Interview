@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class Background : MonoBehaviour
@@ -8,6 +9,12 @@ public class Background : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        var allImages = Resources.FindObjectsOfTypeAll<Image>();
+
+        foreach (var image in allImages)
+        {
+            image.alphaHitTestMinimumThreshold = 0.5f;
+        }
         GenerateCollidersAcrossScreen();
     }
 

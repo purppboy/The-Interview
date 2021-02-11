@@ -13,6 +13,8 @@ public class Shop : MonoBehaviour
 
     public GameObject buy;
     public GameObject sell;
+    public GameObject buyMain;
+    public GameObject sellMain;
 
     // Start is called before the first frame update
     void Start()
@@ -24,8 +26,19 @@ public class Shop : MonoBehaviour
     void Update()
     {
         ChangeShop();
+        Conversation();
     }
 
+    private void Conversation()
+    {
+        if (Input.GetKeyDown(KeyCode.E) && !sellMain.activeInHierarchy && !buyMain.activeInHierarchy &&
+            _distance < 3 )
+        {
+            
+            buy.SetActive(true);
+            sell.SetActive(true);
+        }
+    }
 
 
     private void ChangeShop()

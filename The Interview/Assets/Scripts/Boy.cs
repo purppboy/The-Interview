@@ -12,6 +12,8 @@ public class Boy : MonoBehaviour
     public float speed = 3;
     private Rigidbody2D _rigidbody;
 
+    public GameObject[] outfitGameObjects;
+
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +23,9 @@ public class Boy : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
 
         _rigidbody.freezeRotation = true;
+
+        SaveOutfitsFirst();
+        SetOutfit();
     }
 
 
@@ -44,6 +49,60 @@ public class Boy : MonoBehaviour
             (!Input.GetKey(KeyCode.DownArrow) || !Input.GetKey(KeyCode.UpArrow)))
         {
             transform.position += new Vector3(_hor * speed, _ver * speed, 0) * Time.deltaTime;
+        }
+    }
+
+    private void SaveOutfitsFirst()
+    {
+        const int first = 1;
+
+        if (PlayerPrefs.GetInt("firstTime") != first)
+        {
+            Outfit[] outfits = new Outfit[4];
+            for (int i = 0; i < 4; i++)
+            {
+                outfits[i] = new Outfit(i);
+            }
+
+            OutfitHelper.Save(outfits);
+            PlayerPrefs.SetInt("firstTime", first);
+
+            //cash
+            PlayerPrefs.SetInt("cash", 208);
+
+            //outfit no
+            PlayerPrefs.SetInt("outfitNo", 1);
+        }
+    }
+
+    public void SetOutfit()
+    {
+        int i = OutfitHelper.SelectedOutfitPos();
+
+        //outfit 0
+
+        if (i == 0)
+        {
+            foreach (var iOutfit in outfitGameObjects)
+            {
+                iOutfit.SetActive(false);
+            }
+        }
+        //others
+        else
+        {
+            i--;
+            for (int outfitPos = 0; outfitPos < outfitGameObjects.Length; outfitPos++)
+            {
+                if (outfitPos == i)
+                {
+                    outfitGameObjects[outfitPos].SetActive(true);
+                }
+                else
+                {
+                    outfitGameObjects[outfitPos].SetActive(false);
+                }
+            }
         }
     }
 }
