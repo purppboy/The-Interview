@@ -13,7 +13,7 @@ public class Background : MonoBehaviour
 
         foreach (var image in allImages)
         {
-            image.alphaHitTestMinimumThreshold = 0.5f;
+            image.alphaHitTestMinimumThreshold = 0.4f;
         }
         GenerateCollidersAcrossScreen();
     }

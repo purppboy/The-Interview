@@ -10,26 +10,41 @@ public class BuyBig : MonoBehaviour
 
     public GameObject select;
 
+    public GameObject current;
 
+    public GameObject[] equipPrices;
+
+    public GameObject[] tickSmall;
+
+    public GameObject tickBig;
+    
+    
+    
     // Start is called before the first frame update
     void Start()
     {
         PlayerPrefs.SetInt("buyPos", OutfitHelper.SelectedOutfitPos());
     }
+
     private void OnEnable()
     {
         sellBig.SetActive(false);
-
-        SetOutfits();
+        
+        SetOutfitsAndEquip();
     }
 
-
-    public void SetOutfits()
+    public void SetOutfitsAndEquip()
     {
+        
         int position = PlayerPrefs.GetInt("buyPos");
         Outfit outfit = OutfitHelper.OutfitAtPos(position);
-        
-        
+
+        SetOutfits(position, outfit);
+        SetEquip(outfit);
+    }
+
+    private void SetOutfits(int position, Outfit outfit)
+    {
         //Outfit
         for (int i = 0; i < outfitGameObjects.Length; i++)
         {
@@ -62,19 +77,59 @@ public class BuyBig : MonoBehaviour
 
 
             select.SetActive(false);
+            current.SetActive(false);
         }
         else if (outfit.isSelected)
         {
+            current.SetActive(true);
             select.SetActive(false);
             HidePrices();
         }
         else if (outfit.isBought && !outfit.isSelected)
         {
             select.SetActive(true);
+            current.SetActive(false);
             HidePrices();
+        }
+
+
+        //Tick
+        if (outfit.isSelected)
+        {
+            tickBig.SetActive(true);
+        }
+        else
+        {
+            tickBig.SetActive(false);
         }
     }
 
+    private void SetEquip(Outfit outfit)
+    {
+        for (int i = 0; i < equipPrices.Length; i++)
+        {
+            bool selected = outfit.EquipIsSelected(i);
+            bool bought = outfit.EquipIsBought(i);
+            
+            if (bought && !selected)
+            {
+                tickSmall[i].SetActive(false);
+                equipPrices[i].SetActive(false);
+            }
+            else if (selected)
+            {
+                tickSmall[i].SetActive(true);
+                equipPrices[i].SetActive(false);
+            }
+            //Not bought
+            else
+            {
+                tickSmall[i].SetActive(false);
+                equipPrices[i].SetActive(true);
+                
+            }
+        }
+    }
 
     private void HidePrices()
     {

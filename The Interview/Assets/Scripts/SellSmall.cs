@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class SellSmall : MonoBehaviour
 {
@@ -11,6 +7,9 @@ public class SellSmall : MonoBehaviour
     public GameObject buySmall;
 
     public GameObject sellBig;
+
+    public GameObject shop;
+
 
     private void OnMouseDown()
     {
@@ -22,5 +21,10 @@ public class SellSmall : MonoBehaviour
     {
         sellSmall.SetActive(false);
         buySmall.SetActive(false);
+    }
+
+    private void OnDisable()
+    {
+        shop.GetComponent<Shop>().buyInProgress = false;
     }
 }

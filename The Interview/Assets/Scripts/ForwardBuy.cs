@@ -20,6 +20,6 @@ public class ForwardBuy : MonoBehaviour ,IPointerDownHandler
             PlayerPrefs.SetInt("buyPos",position+1);
         }
         
-        buyBig.GetComponent<BuyBig>().SetOutfits();
+        buyBig.GetComponent<BuyBig>().SetOutfitsAndEquip();
     }
 }

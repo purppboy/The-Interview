@@ -6,7 +6,7 @@ public class Exit : MonoBehaviour,IPointerDownHandler
     public GameObject buyBig;
 
     public GameObject sellBig;
-    
+
     public GameObject boy;
     
 
@@ -17,9 +17,9 @@ public class Exit : MonoBehaviour,IPointerDownHandler
         
         
         PlayerPrefs.SetInt("buyPos",OutfitHelper.SelectedOutfitPos());
+        PlayerPrefs.SetInt("sellPos", 1);
         
-        boy.GetComponent<Boy>().SetOutfit();
-
-
+        boy.GetComponent<Boy>().SetOutfitAndEquip();
+        
     }
 }

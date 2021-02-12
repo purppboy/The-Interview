@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class Boy : MonoBehaviour
@@ -7,12 +8,20 @@ public class Boy : MonoBehaviour
     private static readonly int Leftright = Animator.StringToHash("leftright");
     private static readonly int Updown = Animator.StringToHash("updown");
 
+
     private float _hor;
     private float _ver;
     public float speed = 3;
+    private bool _firstTime;
+
     private Rigidbody2D _rigidbody;
 
     public GameObject[] outfitGameObjects;
+    public GameObject[] equipGameObjects;
+
+    public GameObject cashGameObject;
+    public GameObject outfitNoGameObject;
+    public GameObject controls;
 
 
     // Start is called before the first frame update
@@ -24,8 +33,9 @@ public class Boy : MonoBehaviour
 
         _rigidbody.freezeRotation = true;
 
-        SaveOutfitsFirst();
-        SetOutfit();
+        SaveOutfitsFirstTime();
+        SetCashAndOutfitNo();
+        SetOutfitAndEquip();
     }
 
 
@@ -38,6 +48,8 @@ public class Boy : MonoBehaviour
 
         _hor = Input.GetAxis("Horizontal");
         _ver = Input.GetAxis("Vertical");
+
+        HideControls();
     }
 
 
@@ -52,40 +64,70 @@ public class Boy : MonoBehaviour
         }
     }
 
-    private void SaveOutfitsFirst()
+    private void SaveOutfitsFirstTime()
     {
         const int first = 1;
 
         if (PlayerPrefs.GetInt("firstTime") != first)
         {
-            Outfit[] outfits = new Outfit[4];
-            for (int i = 0; i < 4; i++)
+            Outfit[] outfits = new Outfit[5];
+            for (int i = 0; i < 5; i++)
             {
                 outfits[i] = new Outfit(i);
             }
 
+
             OutfitHelper.Save(outfits);
+
             PlayerPrefs.SetInt("firstTime", first);
 
+
             //cash
-            PlayerPrefs.SetInt("cash", 208);
+            PlayerPrefs.SetInt("cash", 311);
 
             //outfit no
             PlayerPrefs.SetInt("outfitNo", 1);
+
+            PlayerPrefs.SetInt("buyPos", 0);
+
+            PlayerPrefs.SetInt("sellPos", 1);
+
+            //show controls
+            _firstTime = true;
+            controls.SetActive(true);
         }
     }
 
-    public void SetOutfit()
-    {
-        int i = OutfitHelper.SelectedOutfitPos();
 
+    private void SetCashAndOutfitNo()
+    {
+        cashGameObject.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetInt("cash").ToString();
+        outfitNoGameObject.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetInt("outfitNo").ToString();
+    }
+
+    public void SetOutfitAndEquip()
+    {
+        SetOutfit(OutfitHelper.SelectedOutfitPos());
+        SetEqip(OutfitHelper.SelectedOutfit());
+    }
+
+
+    // Here we would change the animations for the outfit and accessories
+    // or show the accessories if they are hidden
+    // 
+    // e.g.
+    // _animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(
+    // "Animations/Outfit1_Equip1_Equip4");
+
+    private void SetOutfit(int i)
+    {
         //outfit 0
 
         if (i == 0)
         {
-            foreach (var iOutfit in outfitGameObjects)
+            foreach (var outfit in outfitGameObjects)
             {
-                iOutfit.SetActive(false);
+                outfit.SetActive(false);
             }
         }
         //others
@@ -103,6 +145,31 @@ public class Boy : MonoBehaviour
                     outfitGameObjects[outfitPos].SetActive(false);
                 }
             }
+        }
+    }
+
+    private void SetEqip(Outfit outfit)
+    {
+        for (int equipPos = 0; equipPos < outfit.equips.Length; equipPos++)
+        {
+            if (outfit.equips[equipPos].isSelected)
+            {
+                equipGameObjects[equipPos].SetActive(true);
+            }
+            else
+            {
+                equipGameObjects[equipPos].SetActive(false);
+            }
+        }
+    }
+
+    private void HideControls()
+    {
+        if (!_firstTime) return;
+
+        if (_hor != 0 || _ver != 0 || Input.GetKeyDown(KeyCode.E))
+        {
+            controls.SetActive(false);
         }
     }
 }

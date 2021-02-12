@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 public class BackBuy : MonoBehaviour ,IPointerDownHandler
 {
     public GameObject buyBig;
+    
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -18,6 +19,8 @@ public class BackBuy : MonoBehaviour ,IPointerDownHandler
             PlayerPrefs.SetInt("buyPos",position-1);
         }
         
-        buyBig.GetComponent<BuyBig>().SetOutfits();
+        buyBig.GetComponent<BuyBig>().SetOutfitsAndEquip();
     }
+    
+    
 }
